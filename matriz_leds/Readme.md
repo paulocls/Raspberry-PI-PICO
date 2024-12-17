@@ -30,6 +30,7 @@ Embora a marca Neopixel, registrada pela Adafruit Industries, seja amplamente co
 
 LEDs compatíveis com essa tecnologia são vendidos sob diferentes nomes, mantendo a mesma funcionalidade, o que facilita seu uso em projetos de iluminação programável.
 
+## ‎‎‎‎‎‎ㅤ
 </details>
 
 Esta funcionalidade economiza muitos pinos e permite criar uma fita ou matriz de LEDs que podem ser conectadas em série, aumentando muito a sua capacidade de comunicação visual.
@@ -80,7 +81,7 @@ Cada unidade PIO possui 4 máquinas de estado independentes, e cada máquina pod
 - **Precisão Temporal:** Permite gerar pulsos e sinais precisos, essenciais para protocolos como o dos LEDs WS2812.
 - **Independência do Processador:** As máquinas PIO funcionam de forma independente, liberando os núcleos ARM para outras tarefas ou permitindo que eles entrem em modo de baixa potência.
 - **Configuração Flexível:** As máquinas podem ser programadas para várias funções de I/O, como geração de PWM, SPI personalizado, UART, ou controle de LEDs endereçáveis.
-
+## ‎‎‎‎‎‎‎‎ㅤ
 </details>
 
 Agora que entendemos a importância do PIO para o controle preciso da matriz de LEDs, vamos detalhar o funcionamento da função npWrite. Essa função utiliza a máquina PIO para enviar os dados de cor, armazenados no buffer da matriz de LEDs, diretamente ao hardware. No entanto, como veremos, essa função apenas transmite os dados do buffer para os LEDs, e, por isso, é necessário que as cores sejam definidas previamente no buffer para que os LEDs acendam. A função npWrite organiza os dados e envia para o PIO, enquanto o PIO cuida do trabalho de baixo nível, como o timing preciso necessário para os LEDs.
@@ -104,12 +105,13 @@ Com essas informações, podemos desenvolver um programa que envia bits codifica
 
 Usando um buffer para armazenar os bits a serem enviados, o nosso programa deve seguir a seguinte lógica:
 
-![Fluxograma](images/fluxograma_pio.png)
+![Fluxograma](images/fluxograma_pio.png)  
 Fluxograma: Operação com PIO.
 
 ## Pseudocódigo - Código da Máquina de Estados do PIO
 
-Usando a interface PIO da extensão da Raspberry Pi Pico, montamos o programa abaixo:
+Usando a interface PIO da extensão da Raspberry Pi Pico, montamos o programa abaixo:  
+**Este código deve ser colocado em um arquivo de nome ws2818b.pio, que deve ser criado no diretório do projeto.**
 
 **Preparação do programa:** Aqui, preparamos o programa que será executado pelo sistema PIO.
 
@@ -150,11 +152,40 @@ O programa consiste de quatro passos, listados abaixo.
 
 ```ruby
 .wrap
-```
+```  
+**Função de inicialização do ws2818b:**
+
+```ruby
+% c-sdk {
+#include "hardware/clocks.h"
+
+void ws2818b_program_init(PIO pio, uint sm, uint offset, uint pin, float freq) {
+
+  pio_gpio_init(pio, pin);
+  
+  pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, true);
+  
+  // Program configuration.
+  pio_sm_config c = ws2818b_program_get_default_config(offset);
+  sm_config_set_sideset_pins(&c, pin); // Uses sideset pins.
+  sm_config_set_out_shift(&c, true, true, 8); // 8 bit transfers, right-shift.
+  sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_TX); // Use only TX FIFO.
+  float prescaler = clock_get_hz(clk_sys) / (10.f * freq); // 10 cycles per transmission, freq is frequency of encoded bits.
+  sm_config_set_clkdiv(&c, prescaler);
+  
+  pio_sm_init(pio, sm, offset, &c);
+  pio_sm_set_enabled(pio, sm, true);
+}
+%}
+
+
+```  
+
 
 **Preparação do Ambiente e Configuração da Máquina PIO:** Primeiro, incluímos as bibliotecas necessárias, definimos parâmetros como o número de LEDs e o pino de dados, e criamos o buffer de pixels. Em seguida, a máquina PIO é preparada para gerenciar os sinais necessários ao controle dos LEDs.
 
-**Configuração Específica da Máquina PIO:** Configuramos a máquina PIO para ajustar o buffer, transmitir os sinais de controle e operar na frequência necessária para o protocolo WS2812. O programa PIO é carregado na máquina e associado ao pino de saída do microcontrolador.
+**Configuração Específica da Máquina PIO:** Configuramos a máquina PIO para ajustar o buffer, transmitir os sinais de controle e operar na frequência necessária para o protocolo WS2812. O programa PIO é carregado na máquina e associado ao pino de saída do microcontrolador. **Para isso deve-se criar um arquivo chamado ws2812b.pio no diretório do projeto, cujo conteúdo será o código disponibilizado acima. Este arquivo então irá gerar uma biblioteca que será utilizada pelo código.**  
+
 
 **Operação da Matriz de LEDs:** Durante a execução do programa, o buffer de pixels é limpo, as cores desejadas são atribuídas aos LEDs, e os dados são enviados para a matriz por meio da função npWrite. Esse ciclo pode ser repetido continuamente para atualizar os LEDs conforme necessário.
 
@@ -329,6 +360,8 @@ Nesse espaço, o programador modificaria o buffer leds para transmitir a imagem 
 
 ```c
  // Aqui, você desenha nos LEDs.
+npSetLED(0, 255, 0, 0); // Define o LED de índice 0 para vermelho.
+npSetLED(12, 0, 255, 0); // Define o LED de índice 12 (centro da matriz) para verde.
 ```
 
 Depois de modificar o buffer, escrevemos os dados nos LEDs e não fazemos mais nada.
@@ -438,6 +471,8 @@ int main() {
  npClear();
 
  // Aqui, você desenha nos LEDs.
+ npSetLED(0, 255, 0, 0); // Define o LED de índice 0 para vermelho.
+ npSetLED(12, 0, 255, 0); // Define o LED de índice 12 (centro da matriz) para verde.
 
  npWrite(); // Escreve os dados nos LEDs.
 
@@ -447,6 +482,52 @@ int main() {
  }
 }
 ```
+## Arquivo CMake
+
+Lembre-se que antes de validar nosso algoritmo precisamos fazer algumas definições de compilação usando o CMake.
+
+O arquivo CMakeLists.txt é essencial para configurar como o programa será compilado e vinculado às bibliotecas necessárias. Ele atua como uma "receita" para o CMake criar o arquivo binário final que será carregado na Raspberry Pi Pico.
+
+Considere que o nome do projeto é "neopixel_pio".
+
+## CMakeLists.txt
+
+```ruby
+# Defina a versão mínima do CMake
+cmake_minimum_required(VERSION 3.13)
+
+# Nome do projeto
+project(neopixel_pio)
+
+# Inclui os arquivos do SDK da Raspberry Pi Pico
+include(pico_sdk_import.cmake)
+
+# Inicializa o SDK do Raspberry Pi Pico
+pico_sdk_init()
+
+#Generate PIO header
+pico_generate_pio_header(neopixel_pio ${CMAKE_CURRENT_LIST_DIR}/ws2818b.pio)
+
+# Define o executável do projeto, especificando o arquivo principal (microphone_adc_example.c)
+add_executable(neopixel_pio
+        neopixel_pio.c
+        )
+
+# Vincula as bibliotecas necessárias para o funcionamento do programa
+target_link_libraries(neopixel_pio
+    pico_stdlib 
+    hardware_pio
+    hardware_clocks
+)
+
+# Gera arquivos adicionais como .map, .bin, .hex, etc., necessários para a programação do microcontrolador
+pico_add_extra_outputs(neopixel_pio)
+
+# Define a URL de referência para este exemplo (opcional)
+# Isso é útil se você estiver compartilhando o código e quiser apontar para uma fonte online
+example_auto_set_url(neopixel_pio)
+```
+
 
 ## Funções do Código
 
@@ -529,7 +610,7 @@ npSetLED(12, 0, 255, 0); // Define o LED de índice 12 (centro da matriz) para v
 
 Nos próximos passos, veremos como preencher esse buffer com as cores desejadas, explorando o potencial completo da matriz de LEDs endereçáveis da BitDogLab.
 
-### Exemplo Completo:
+### Exemplo Completo 1:
 
 Aqui está um exemplo que demonstra o uso das funções:
 
@@ -554,7 +635,31 @@ int main() {
     }
 }
 ```
+  
+### Exemplo Completo 2:
 
+Aqui está um exemplo que demonstra o uso de loops da função “for” para criar desenhos:  
+
+```c
+int main() {
+    // Inicializa o sistema.
+    stdio_init_all();
+    npInit(LED_PIN);
+    npClear(); // Garante que todos os LEDs comecem apagados.
+
+ // Cria desenhos acendendo LEDs em sequência. Quando todos os LEDs estão acesos, todos os LEDs são apagados (npClear) e o loop reinicia.
+ while (true) {	
+    for (int i = 1; i < 26; i++) {
+    npSetLED(i-1, 50, 0, 0);
+    npWrite();
+    sleep_ms(1000/i);
+    }
+    sleep_ms(500);
+    npClear();
+ }
+}
+
+```
 ### Ajuste de vetor para matriz:
 
 Na BitDogLab, o índice fornecido na função npsetLED corresponde à posição do LED na fila, indo de 0 até 24 para a matriz de 25 LEDs.
