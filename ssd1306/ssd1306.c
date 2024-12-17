@@ -29,6 +29,13 @@ int main() {
   ssd1306_fill(&ssd, false);
   ssd1306_hline(&ssd, 0, 127, 32, true);
   ssd1306_vline(&ssd, 63, 0, 63, true);
+  //ssd1306_draw_string(&ssd, 0, 0, "Bem-vindos!");
+  //ssd1306_draw_string(&ssd, 0, 10, "Embarcatech");
+  ssd1306_send_data(&ssd); // Atualiza o display
+
+    ssd1306_draw_string(&ssd, 0, 0, "Bem-vindos!");
+    ssd1306_draw_string(&ssd, 0, 10, "Embarcatech");
+    ssd1306_send_data(&ssd); // Atualiza o display
 
   ssd1306_send_data(&ssd);
 
