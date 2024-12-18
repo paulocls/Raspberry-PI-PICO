@@ -214,7 +214,7 @@ float mic_power() {
 uint8_t get_intensity(float v) {
   uint count = 0;
 
-  while ((v -= ADC_STEP) > 0.f)
+  while ((v -= ADC_STEP/20) > 0.f)
     ++count;
   
   return count;
