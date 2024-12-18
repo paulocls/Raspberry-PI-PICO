@@ -16,7 +16,7 @@ A BitDogLab possui alguns LEDs coloridos, também conhecidos como LEDs RGB. Este
 
 A seguir mostramos o círculo de cores, onde as principais se misturam e criam outras cores. Observe que no centro, na mistura de todas as cores surge o branco.
 
-![Figura](images/led_rgb-rgb.png)
+![Figura](images/led_rgb-rgb.png)  
 
 ## Atividade:
 
@@ -26,7 +26,7 @@ Vamos desenvolver um programa - em C - para acender sequencialmente o LED RGB em
 
 Para começar, vamos definir 3 variáveis binárias chamadas de R, G e B. Há inúmeras formas de implementar um algoritmo que faça com que as 3 variáveis binárias variem por todas as possibilidades de cores. Na figura a seguir, mostramos o círculo de cor com o estado esperado para as 3 variáveis (R, G e B).
 
-![Figura](images/led_rgb-rgb_variaveis.png)
+![Figura](images/led_rgb-rgb_variaveis.png)  
 Figura: Definição das variáveis booleanas para cada cor do LED, na ordem R, G e B.
 
 Uma forma de implementar o algoritmo é usando as variáveis booleanas que descrevemos a seguir.
