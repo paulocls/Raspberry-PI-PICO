@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 #include "hardware/dma.h"
@@ -10,7 +11,7 @@
 
 // Parâmetros e macros do ADC.
 #define ADC_CLOCK_DIV 96.f
-#define SAMPLES 100 // Número de amostras que serão feitas do ADC.
+#define SAMPLES 200 // Número de amostras que serão feitas do ADC.
 #define ADC_ADJUST(x) (x * 3.3f / (1 << 12u) - 1.65f) // Ajuste do valor do ADC para Volts.
 #define ADC_MAX 3.3f
 #define ADC_STEP (3.3f/5.f) // Intervalos de volume do microfone.
@@ -29,7 +30,7 @@ dma_channel_config dma_cfg;
 uint16_t adc_buffer[SAMPLES];
 
 void sample_mic();
-float average_mic();
+float mic_power();
 uint8_t get_intensity(float v);
 
 int main() {
@@ -89,8 +90,8 @@ int main() {
     // Realiza uma amostragem do microfone.
     sample_mic();
 
-    // Pega o valor médio da amostragem do microfone.
-    float avg = average_mic();
+    // Pega a potência média da amostragem do microfone.
+    float avg = mic_power();
     avg = 2.f * abs(ADC_ADJUST(avg)); // Ajusta para intervalo de 0 a 3.3V. (apenas magnitude, sem sinal)
 
     uint intensity = get_intensity(avg); // Calcula intensidade a ser mostrada na matriz de LEDs.
@@ -195,16 +196,16 @@ void sample_mic() {
 }
 
 /**
- * Calcula o valor médio das leituras do ADC.
+ * Calcula a potência média das leituras do ADC. (Valor RMS)
  */
-float average_mic() {
+float mic_power() {
   float avg = 0.f;
 
   for (uint i = 0; i < SAMPLES; ++i)
-    avg += adc_buffer[i];
+    avg += adc_buffer[i] * adc_buffer[i];
   
   avg /= SAMPLES;
-  return avg;
+  return sqrt(avg);
 }
 
 /**
