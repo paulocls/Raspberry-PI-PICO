@@ -315,7 +315,7 @@ const uint8_t bitmap_128x64[] = {
 };
 ```
 
-![Figura](images/bitmap.png)
+![Figura](images/bitmap_info.png)
 
 **Passo 2:** Código para Renderizar o Bitmap no Display OLED
 
