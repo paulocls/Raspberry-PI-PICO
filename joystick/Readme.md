@@ -19,19 +19,19 @@ Figura: fluxograma do código para processar as entradas vindas do joystick. OBS
 A partir deste fluxograma, vamos destacar e detalhar as seguintes etapas principais num novo documento chamado de pseudocódigo.  
    
    
-**Início -**  Representa o ponto de partida do programa.  
+- Início: Representa o ponto de partida do programa.  
   
-**Configuração de Inicialização -** O programa começa incluindo bibliotecas e configurando as entradas analógicas que serão usadas para ler o joystick.  
+- Configuração de Inicialização: O programa começa incluindo bibliotecas e configurando as entradas analógicas que serão usadas para ler o joystick.  
   
-**Loop Infinito -** Uma estrutura de repetição (loop) onde o programa lê continuamente os valores do joystick e exibe os resultados. Esse loop continuará a execução indefinidamente.  
+- Loop Infinito: Uma estrutura de repetição (loop) onde o programa lê continuamente os valores do joystick e exibe os resultados. Esse loop continuará a execução indefinidamente.  
   
-**Leitura das Entradas -** No loop, o programa lê os valores das entradas analógicas do joystick, tanto para o eixo X quanto para o eixo Y.  
+- Leitura das Entradas: No loop, o programa lê os valores das entradas analógicas do joystick, tanto para o eixo X quanto para o eixo Y.  
   
-**Cálculo da Posição -** Com os valores lidos, o programa calcula a posição do joystick em uma barra de 40 caracteres de largura.  
+- Cálculo da Posição: Com os valores lidos, o programa calcula a posição do joystick em uma barra de 40 caracteres de largura.  
   
-**Exibição dos Resultados -** O programa exibe no terminal uma barra de progresso que representa graficamente a posição do joystick.  
+- Exibição dos Resultados: O programa exibe no terminal uma barra de progresso que representa graficamente a posição do joystick.  
   
-**Retorno ao Início do Loop -** Após exibir o resultado, o programa espera brevemente e retorna ao início do loop para repetir o processo.  
+- Retorno ao Início do Loop: Após exibir o resultado, o programa espera brevemente e retorna ao início do loop para repetir o processo.  
   
   
 Na etapa seguinte podemos transcrever o pseudocódigo em um programa escolhendo alguma linguagem específica, respeitando sua sintaxe e convenções. Esta construção pode ser realizada etapa por etapa respeitando a sequência do pseudocódigo ou então pode ser reaproveitada de um repositório. Normalmente é aqui que o desenvolvedor investe um certo tempo depurando o código e testando até que o resultado atenda as suas espectativas.    
@@ -68,11 +68,11 @@ int main() {
     adc_gpio_init(26);
     adc_gpio_init(27);
 ```
-**Loop Infinito:** Uma estrutura de repetição (loop) onde o programa lê continuamente os valores do joystick e exibe os resultados. Esse loop continuará a execução indefinidamente.  
-**Leitura das Entradas:** No loop, o programa lê os valores das entradas analógicas do joystick, tanto para o eixo X quanto para o eixo Y.  
-**Cálculo da Posição:** Com os valores lidos, o programa calcula a posição do joystick em uma barra de 40 caracteres de largura.  
-**Exibição dos Resultados:** O programa exibe no terminal uma barra de progresso que representa graficamente a posição do joystick.  
-**Retorno ao Início do Loop:** Após exibir o resultado, o programa espera brevemente e retorna ao início do loop para repetir o processo.
+- Loop Infinito: Uma estrutura de repetição (loop) onde o programa lê continuamente os valores do joystick e exibe os resultados. Esse loop continuará a execução indefinidamente.  
+- Leitura das Entradas: No loop, o programa lê os valores das entradas analógicas do joystick, tanto para o eixo X quanto para o eixo Y.  
+- Cálculo da Posição: Com os valores lidos, o programa calcula a posição do joystick em uma barra de 40 caracteres de largura.  
+- Exibição dos Resultados: O programa exibe no terminal uma barra de progresso que representa graficamente a posição do joystick.  
+- Retorno ao Início do Loop: Após exibir o resultado, o programa espera brevemente e retorna ao início do loop para repetir o processo.
 
 ```c
 // Inicia o loop infinito para leitura e exibição dos valores do joystick
@@ -207,10 +207,10 @@ example_auto_set_url(joystick_display)
 
 ```
 Explicação dos principais comandos do CMAKE:  
-**add_executable:** Define o executável para o projeto, especificando o arquivo fonte principal joystick_display.c.   
-**target_link_libraries:** Adiciona as bibliotecas necessárias. pico_stdlib é a biblioteca padrão da Raspberry Pi Pico, e hardware_adc permite o uso do ADC.  
-**pico_add_extra_outputs:** Gera arquivos adicionais, como .uf2, .bin, e .hex, para facilitar o carregamento do código na Pico.  
-**example_auto_set_url:** Define uma URL associada a este exemplo (geralmente um link para a documentação ou o repositório). Esse passo é opcional, mas útil para referência.  
+- add_executable: Define o executável para o projeto, especificando o arquivo fonte principal joystick_display.c.
+- target_link_libraries: Adiciona as bibliotecas necessárias. pico_stdlib é a biblioteca padrão da Raspberry Pi Pico, e hardware_adc permite o uso do ADC.
+- pico_add_extra_outputs: Gera arquivos adicionais, como .uf2, .bin, e .hex, para facilitar o carregamento do código na Pico.
+- example_auto_set_url: Define uma URL associada a este exemplo (geralmente um link para a documentação ou o repositório). Esse passo é opcional, mas útil para referência.  
 ## Exercícios: 
 
 Faça uma adaptação neste código em C de forma que o programa saia do loop infinito e exiba uma mensagem de finalização no terminal quando o botão do joystick for apertado. Comece pelo fluxograma, depois modifique o pseudocódigo e por fim implemente e depure seu código em C. Faça um vídeo mostrando seu funcionamento e carregue no Moodle.   
