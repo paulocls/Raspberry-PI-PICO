@@ -140,11 +140,11 @@ restart:
     ssd1306_config(&ssd_bm);
 
     ssd1306_draw_bitmap(&ssd_bm, bitmap_128x64);
+*/
 
     while(true) {
         sleep_ms(1000);
     }
-*/
 
     return 0;
 }
