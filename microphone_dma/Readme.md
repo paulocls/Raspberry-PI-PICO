@@ -51,7 +51,7 @@ Como funciona:
   
 Um microfone é um dispositivo que converte ondas sonoras em sinais elétricos. Ele capta as vibrações do ar causadas por sons e as transforma em um sinal elétrico proporcional à intensidade sonora. Esse processo é essencial para uma ampla gama de aplicações, como gravações de áudio, sistemas de reconhecimento de voz e controle por som em projetos de eletrônica. Na figura abaixo, à esquerda, temos a visão 3D do circuito do microfone na placa BitDog Lab, e à direita, o esquema elétrico desse circuito.   
 
-![Figura](images/microfone_circuito_foto.png)  ![Figura](images/microfone_circuito_esquema.png)   
+![Figura](images/microfone_circuito_esquema.png)   ![Figura](images/microfone_circuito_foto.png)  
 Figura: Visão 3d do circuito do microfone e seu esquema elétrico com os componentes necessários para o circuito funcionar da forma correta realizando a leitura dos sinais sonoros.  
   
 O circuito inclui componentes como capacitores, resistores, indutores e um amplificador operacional MAX4466, que realiza o condicionamento do sinal proveniente do microfone. Muitas vezes, esse sinal possui uma amplitude baixa, e para que seja possível sua leitura, é necessário amplificá-lo e filtrá-lo, logo o circuito realiza esse processamento do sinal elétrico, e é esse sinal já tratado adequadamente que é recebido pela GPIO 28 da placa.  
