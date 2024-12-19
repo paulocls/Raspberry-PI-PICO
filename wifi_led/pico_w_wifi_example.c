@@ -1,100 +1,3 @@
-/*
-#include "pico/stdlib.h"
-#include "pico/cyw43_arch.h"
-#include "lwip/pbuf.h"
-#include "lwip/tcp.h"
-#include <stdio.h>
-#include <string.h>
-
-#define WIFI_SSID "NomeDaRedeWiFi"  // Substitua pelo nome da sua rede Wi-Fi
-#define WIFI_PASS "SenhaDaRedeWiFi" // Substitua pela senha da sua rede Wi-Fi
-#define TCP_PORT 80                // Porta para o servidor HTTP
-
-// Função de callback para o servidor HTTP
-static err_t http_server_callback(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) {
-    if (p == NULL) {
-        tcp_close(tpcb);
-        tcp_recv(tpcb, NULL);
-        return ERR_OK;
-    }
-    // Processar a requisição
-    const char *response = 
-        "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-        "<html><body><h1>Pico W HTTP Server</h1>"
-        "<p><a href=\"/led/on\">Ligar LED</a></p>"
-        "<p><a href=\"/led/off\">Desligar LED</a></p></body></html>";
-
-    char *request = (char *)p->payload;
-    printf("Requisição recebida:\n%s\n", request);
-
-    // Checar comandos de ligar/desligar o LED
-    if (strstr(request, "GET /led/on")) {
-        gpio_put(PICO_DEFAULT_LED_PIN, 1);
-    } else if (strstr(request, "GET /led/off")) {
-        gpio_put(PICO_DEFAULT_LED_PIN, 0);
-    }
-
-    // Enviar resposta
-    tcp_write(tpcb, response, strlen(response), TCP_WRITE_FLAG_COPY);
-    tcp_recved(tpcb, p->len);
-    pbuf_free(p);
-
-    return ERR_OK;
-}
-
-// Função para inicializar o servidor TCP
-static void init_http_server() {
-    struct tcp_pcb *pcb = tcp_new();
-    if (!pcb) {
-        printf("Erro ao criar socket TCP\n");
-        return;
-    }
-
-    if (tcp_bind(pcb, IP_ADDR_ANY, TCP_PORT) != ERR_OK) {
-        printf("Erro ao vincular à porta %d\n", TCP_PORT);
-        return;
-    }
-
-    pcb = tcp_listen(pcb);
-    tcp_accept(pcb, http_server_callback);
-    printf("Servidor HTTP inicializado na porta %d\n", TCP_PORT);
-}
-
-// Função principal
-int main() {
-    stdio_init_all();
-
-    if (cyw43_arch_init()) {
-        printf("Erro ao inicializar CYW43\n");
-        return -1;
-    }
-
-    printf("Conectando ao Wi-Fi...\n");
-    cyw43_arch_enable_sta_mode();
-    if (cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASS, CYW43_AUTH_WPA2_AES_PSK, 10000)) {
-        printf("Falha na conexão Wi-Fi!\n");
-        return -1;
-    }
-
-    printf("Conectado ao Wi-Fi. IP: %s\n", ip4addr_ntoa(netif_default->ip_addr));
-
-    // Configurar LED
-    gpio_init(PICO_DEFAULT_LED_PIN);
-    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
-
-    // Iniciar servidor HTTP
-    init_http_server();
-
-    while (true) {
-        cyw43_arch_poll();
-        sleep_ms(100);
-    }
-
-    cyw43_arch_deinit();
-    return 0;
-}
-
-*/
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 #include "lwip/tcp.h"
@@ -106,26 +9,12 @@ int main() {
 #define WIFI_PASS "mprilip62165886" // Substitua pela senha da sua rede Wi-Fi
 
 // Buffer para respostas HTTP
-/*
 #define HTTP_RESPONSE "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" \
                       "<!DOCTYPE html><html><body>" \
                       "<h1>Controle do LED</h1>" \
                       "<p><a href=\"/led/on\">Ligar LED</a></p>" \
                       "<p><a href=\"/led/off\">Desligar LED</a></p>" \
                       "</body></html>\r\n"
-
-*/
-#define HTTP_RESPONSE "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"\
-                      "<html>"\
-                      "<head>"\
-                      "<style>body { font-family: Arial; }</style>"\
-                      "</head>"\
-                      "<body>"\
-                      "<h1>Servidor da Pico W</h1>"\
-                      "<button onclick=\"fetch('/led/on')\">Ligar LED</button>"\
-                      "<button onclick=\"fetch('/led/off')\">Desligar LED</button>"\
-                      "</body>"\
-                      "</html>"
 
 
 

@@ -28,32 +28,32 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-project(Wifi_backgrownd_lwip C CXX ASM)
+project(pico_w_wifi_example C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(Wifi_backgrownd_lwip Wifi_backgrownd_lwip.c )
+add_executable(pico_w_wifi_example pico_w_wifi_example.c )
 
-pico_set_program_name(Wifi_backgrownd_lwip "Wifi_backgrownd_lwip")
-pico_set_program_version(Wifi_backgrownd_lwip "0.1")
+pico_set_program_name(pico_w_wifi_example "pico_w_wifi_example")
+pico_set_program_version(pico_w_wifi_example "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(Wifi_backgrownd_lwip 0)
-pico_enable_stdio_usb(Wifi_backgrownd_lwip 1)
+pico_enable_stdio_uart(pico_w_wifi_example 0)
+pico_enable_stdio_usb(pico_w_wifi_example 1)
 
 # Add the standard library to the build
-target_link_libraries(Wifi_backgrownd_lwip
+target_link_libraries(pico_w_wifi_example
         pico_stdlib    
         pico_cyw43_arch_lwip_threadsafe_background
         )
         
 # Add the standard include files to the build
-target_include_directories(Wifi_backgrownd_lwip PRIVATE
+target_include_directories(pico_w_wifi_example PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}
 )
 
-pico_add_extra_outputs(Wifi_backgrownd_lwip)
+pico_add_extra_outputs(pico_w_wifi_example)
 
