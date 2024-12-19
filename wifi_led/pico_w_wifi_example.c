@@ -5,8 +5,8 @@
 #include <stdio.h>
 
 #define LED_PIN 12          // Define o pino do LED
-#define WIFI_SSID "Mauro"  // Substitua pelo nome da sua rede Wi-Fi
-#define WIFI_PASS "mprilip62165886" // Substitua pela senha da sua rede Wi-Fi
+#define WIFI_SSID "NomeDaRedeWiFi"  // Substitua pelo nome da sua rede Wi-Fi
+#define WIFI_PASS "SenhaDaRedeWiFi" // Substitua pela senha da sua rede Wi-Fi
 
 // Buffer para respostas HTTP
 #define HTTP_RESPONSE "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" \
